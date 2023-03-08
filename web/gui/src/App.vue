@@ -3,22 +3,22 @@
     <el-row>
         <el-col :span="22" :offset="1">
             <el-card>
-                        <div slot="header">订阅信息</div>
+                        <div slot="header">اطلاعات اشتراک</div>
                         <el-container :element-loading-text="loadingContent">
                             <el-form label-width="120px" size="large">
-                                    <el-form-item label="设置：">
+                                    <el-form-item label="برپایی：">
                                         <el-radio-group v-model="option" :disabled="loading">
-                                            <el-radio :label="0">基础</el-radio>
-                                            <el-radio :label="1">高级</el-radio>
-                                            <el-radio :label="2">导出</el-radio>
-                                            <el-radio :label="3">手动生成</el-radio>
+                                            <el-radio :label="0">پایه</el-radio>
+                                            <el-radio :label="1">پیشرفته</el-radio>
+                                            <el-radio :label="2">صادرات</el-radio>
+                                            <el-radio :label="3">به صورت دستی تولید شده است</el-radio>
                                         </el-radio-group>
                                     </el-form-item>
 
-                                    <el-form-item label="链接：" v-if="option<2">
+                                    <el-form-item label="ارتباط دادن：" v-if="option<2">
                                         <el-col :span="8">
                                             <el-input v-model="subscription" style="width: 800px"
-                                            @keyup.enter.native="submit" placeholder="支持 V2Ray/Trojan/SS/SSR/Clash 订阅链接，多个节点链接及文件路径的批量测速"
+                                            @keyup.enter.native="submit" placeholder="حمایت کردن V2Ray/Trojan/SS/SSR/Clash اندازه گیری سرعت دسته ای پیوندهای اشتراک، پیوندهای چندگانه گره و مسیرهای فایل"
                                             :disabled="loading||upload" clearable></el-input>
                                         </el-col>
                                         <el-col :span="12" ></el-col>
@@ -27,51 +27,51 @@
                                             action="" :show-file-list="false" ref="upload" :http-request="handleFileChange"
                                             :auto-upload="true" :before-upload="beforeUpload">
                                             <i class="el-icon-upload" v-if="!subscription.length"></i>
-                                            <!--<el-button slot="trigger" type="primary" icon="el-icon-files" :disabled="loading" v-if="!upload">选择配置文件</el-button>-->
+                                            <!--<el-button slot="trigger" type="primary" icon="el-icon-files" :disabled="loading" v-if="!upload">پروفایل را انتخاب کنید</el-button>-->
                                             <el-button slot="tip" type="danger" icon="el-icon-close" :disabled="loading"
-                                                v-if="upload" @click="cancelFileUpload">取消文件选择</el-button>
+                                                v-if="upload" @click="cancelFileUpload">لغو انتخاب فایل</el-button>
                                             <div class="el-upload__text" v-if="!subscription.length">
-                                                还可以将配置文件拖到此处，或<em>点击上传</em></div>
+                                                همچنین می توانید فایل های پیکربندی را به اینجا بکشید یا<em>برای آپلود کلیک کنید</em></div>
                                             </el-upload>
                                         </el-col>
                                         
                                     </el-form-item>
 
-                                    <el-form-item label="并发数：" v-if="option<2">
+                                    <el-form-item label="شماره همزمان：" v-if="option<2">
                                         <el-input v-model="concurrency" style="width: 235px" type="number" min="1" max="50"
                                             @keyup.enter.native="submit" :disabled="loading"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="测试时长(秒)：" v-if="option===1">
+                                    <el-form-item label="مدت زمان آزمون (ثانیه)：" v-if="option===1">
                                         <el-input v-model="timeout" style="width: 235px" type="number" min="5" max="60"
                                             @keyup.enter.native="submit" :disabled="loading"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="去除重复节点：" v-if="option===1">
-                                        <el-checkbox v-model="unique">去重</el-checkbox>
+                                    <el-form-item label="حذف گره های تکراری：" v-if="option===1">
+                                        <el-checkbox v-model="unique">کپی برداری</el-checkbox>
                                     </el-form-item>
-                                    <el-form-item label="测试项：" v-if="option<2">
+                                    <el-form-item label="موارد تست：" v-if="option<2">
                                         <el-select v-model="speedtestMode" :disabled="loading">
                                             <el-option v-for="(item, key, index) in init.speedtestModes" :key="index"
                                                 :label="item" :value="key">
                                             </el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="自定义组名：" v-if="option<2">
+                                    <el-form-item label="نام گروه سفارشی：" v-if="option<2">
                                         <el-input v-model="groupname" style="width: 235px" 
                                             @keyup.enter.native="submit" :disabled="loading" clearable></el-input>
                                         <el-button type="primary" @click="submit" style="margin-left: 20px" v-if="!option"
-                                            :disabled="loading" :loading="loading"><el-icon v-if="!loading" class="el-icon--left"><Select /></el-icon>提 交</el-button>
+                                            :disabled="loading" :loading="loading"><el-icon v-if="!loading" class="el-icon--left"><Select /></el-icon>ارسال</el-button>
                                         <el-button type="danger" @click="terminate" :icon="Close" v-if="!option"
-                                            :disabled="!loading"><el-icon class="el-icon--left"><Close /></el-icon>终 止</el-button>
+                                            :disabled="!loading"><el-icon class="el-icon--left"><Close /></el-icon>خاتمه دادن</el-button>
                                     </el-form-item>
 
-                                    <el-form-item label="Ping方式：" v-if="option===1" :disabled="loading">
+                                    <el-form-item label="Pingمسیر：" v-if="option===1" :disabled="loading">
                                         <el-select v-model="pingMethod" >
                                             <el-option v-for="(item, key, index) in init.pingMethods" :key="index" :label="item" :value="key">
                                             </el-option>
                                         </el-select>
                                         <el-button type="primary" @click="submit" style="margin-left: 20px" :icon="Check" :disabled="loading"
-                                            :loading="loading">提 交</el-button>
-                                        <el-button type="danger" @click="terminate" :icon="Close" :disabled="!loading">终 止</el-button>
+                                            :loading="loading">ارسال</el-button>
+                                        <el-button type="danger" @click="terminate" :icon="Close" :disabled="!loading">خاتمه دادن</el-button>
                                     </el-form-item>
                                     
                                     <!-- export -->
